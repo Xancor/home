@@ -1,0 +1,261 @@
+<html>
+    <head>
+        <meta charset="win-1251">
+
+        <script src="imupl.js" charset="win-1251"></script>
+    </head>
+    <body>
+		<script>
+
+var black = -1; 
+var white = 1; 
+var square_dim = 30; 
+var piece_toggled = false; 
+var p1 = false;
+var jump2 = false; 
+var p2 = false; 
+var gover = false; 
+var safe_from = safe_to = null;
+var toggler = null;
+var togglers = 0;
+
+
+function Board() {
+board = new Array();
+for (var i=0;i<8; i++) {
+board[i] = new Array();
+for (var j=0;j<8;j++)
+board[i][j] = Board.arguments[8*j+i];}
+board[-2] = new Array();
+board[-1] = new Array(); 
+board[8] = new Array(); 
+board[9] = new Array(); }
+
+//ключ поле
+var board;
+Board(1,0,1,0,1,0,1,0,0,1,0,1,0,1,0,1,1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,-1,0,-1,0,-1,-1,0,-1,0,-1,0,-1,0,0,-1,0,-1,0,-1,0,-1);
+
+function message(str) {
+	if (!gover)
+	document.disp.message.value = str;}
+	
+function moveable_space(i,j) {
+	return (((i%2)+j)%2 == 0);}
+	
+function Coord(x,y) {
+	this.x = x;
+	this.y = y;}
+	
+function coord(x,y) {
+	c = new Coord(x,y);
+return c;}
+
+document.write("<table border=0 cellspacing=0 cellpadding=0 width="+(square_dim*8+8)
++"<tr><td><img src='black.gif' width="+(square_dim*8+8)
++" height=4><br></td></tr>");
+
+for(var j=0;j<8;j++) {
+	document.write("<tr><td><img src='black.gif' width=4 height="+square_dim+">");
+	for(var i=0;i<8;i++) {
+		if (moveable_space(i,j))
+		document.write("<a href='javascript:clicked("+i+","+j+")'>");
+		document.write("<img src='");
+			if (board[i][j]==1) document.write("you1.gif");
+			else if (board[i][j]==-1) document.write("me1.gif");
+			else if (moveable_space(i,j)) document.write("gray.gif");
+			else document.write("black.gif");
+			document.write("' width="+square_dim+" height="+square_dim+" name='space"+i+""+j+"' border=0>");
+			if (moveable_space(i,j)) document.write("</a>");}
+			document.write("<img src='black.gif' width=4 height="+square_dim+"></td></tr>");}
+			document.write("<tr><td><img src='black.gif' width="+(square_dim*8+8)+" height=4><br></td></tr></table><br>"+"<form name='disp'><input type=text readonly style='border-style:solid; border-width:0;' size=40 name='message' value=''><br><br><input type=button value=\" Новая игра \" onClick=\"location.href+=''\" style=\"font-weight: bold\"></form>");
+			
+function clicked(i,j) {
+	if (p1) {
+		if (integ(board[i][j])==1) toggle(i,j);
+		else if (piece_toggled) move(selected,coord(i,j));
+			else message(":)");
+} else { if (integ(board[i][j])==-1) toggle(i,j);
+		else if (piece_toggled) move(selected,coord(i,j));
+			else message(":)");}
+
+			
+//ошибка ?
+function toggle(x,y) {
+	if (p1) {
+		if (piece_toggled)
+		draw(selected.x,selected.y,"3"+((board[selected.x][selected.y]==1.1)?"q":"")+".gif");
+		if (piece_toggled && (selected.x == x) && (selected.y == y)) {
+		piece_toggled = false;
+		if (jump2) { p1 = jump2 = false;p2(); } } else {
+		piece_toggled = true;
+		draw(x,y,"4"+((board[x][y]==1.1)?"q":"")+".gif");}
+		selected = coord(x,y); } else {
+		if ((piece_toggled) && (integ(board[selected_c.x][selected_c.y])==-1))
+		draw(selected_c.x,selected_c.y,"5"+((board[selected_c.x][selected_c.y]==-1.1)?"q":"")+".gif");
+		if (piece_toggled && (selected_c.x == x) && (selected_c.y == y)) {
+		piece_toggled = false; } else {
+		piece_toggled = true;
+		draw(x,y,"6"+((board[x][y]==-1.1)?"q":"")+".gif");}
+   
+selected_c = coord(x,y);}
+
+}
+function p2(x,y){
+		if (piece_toggled)
+		draw(selected.x,selected.y,"3"+((board[selected.x][selected.y]==1.1)?"q":"")+".gif");
+		if (piece_toggled && (selected.x == x) && (selected.y == y)) {
+		piece_toggled = false;
+		if (jump2) { p1 = jump2 = false;p1 =true; } } else {
+		piece_toggled = true;
+		draw(x,y,"4"+((board[x][y]==1.1)?"q":"")+".gif");}
+		selected = coord(x,y); } else {
+		if ((piece_toggled) && (integ(board[selected_c.x][selected_c.y])==-1))
+		draw(selected_c.x,selected_c.y,"5"+((board[selected_c.x][selected_c.y]==-1.1)?"q":"")+".gif");
+		if (piece_toggled && (selected_c.x == x) && (selected_c.y == y)) {
+		piece_toggled = false; } else {
+		piece_toggled = true;
+		draw(x,y,"6"+((board[x][y]==-1.1)?"q":"")+".gif");}
+   
+selected_c = coord(x,y);}
+
+};
+
+function draw(x,y,name) {
+document.images["space"+x+""+y].src = name;}
+
+function integ(num) {
+	if (num != null)
+	return Math.round(num);
+	else
+return null;}
+
+function abs(num) {
+	return Math.abs(num);}
+	
+function sign(num) {
+	if (num < 0) return -1;
+else return 1;}
+
+function concatenate(arr1,arr2) {
+for(var i=0;i<arr2.length;i++)
+arr1[arr1.length+i] = arr2[i];
+return arr1;}
+
+function legal_move(from,to) {
+	if ((to.x < 0) || (to.y < 0) || (to.x > 7) || (to.y > 7)) return false;
+	piece = board[from.x][from.y];
+	distance = coord(to.x-from.x,to.y-from.y);
+	if ((distance.x == 0) || (distance.y == 0)) {
+	return false;}
+	if (abs(distance.x) != abs(distance.y)) {
+	return false;}
+	if (abs(distance.x) > 2) {
+	return false;}
+	if ((abs(distance.x) == 1) && jump2) {
+	return false;}
+	if ((board[to.x][to.y] != 0) || (piece == 0)) {
+	return false;}
+	if ((abs(distance.x) == 2)
+	&& (integ(piece) != -integ(board[from.x+sign(distance.x)][from.y+sign(distance.y)]))) {
+	return false;}
+	if ((integ(piece) == piece) && (sign(piece) != sign(distance.y))) {
+	return false;}
+	return true;}
+          
+	
+function move(from,to) {
+	p1 = true;
+	if (legal_move(from,to)) {
+	piece = board[from.x][from.y];
+	distance = coord(to.x-from.x,to.y-from.y);
+	if ((abs(distance.x) == 1) && (board[to.x][to.y] == 0)) {
+	swap(from,to);
+} else if ((abs(distance.x) == 2)
+&& (integ(piece) != integ(board[from.x+sign(distance.x)][from.y+sign(distance.y)]))) {
+double_jump = false;
+swap(from,to);
+remove(from.x+sign(distance.x),from.y+sign(distance.y));
+if ((legal_move(to,coord(to.x+2,to.y+2)))
+|| (legal_move(to,coord(to.x+2,to.y-2)))
+|| (legal_move(to,coord(to.x-2,to.y-2)))
+|| (legal_move(to,coord(to.x-2,to.y+2)))) {
+jump2 = true;}}
+if ((board[to.x][to.y] == 1) && (to.y == 7)) queen(to.x,to.y);
+selected = to;
+if (gover() && !jump2) {
+setTimeout("toggle("+to.x+","+to.y+");p1 = jump2 = false;p2();",1000);}}
+return true;}
+
+function queen(x,y) {
+if (board[x][y] == 1) {
+board[x][y] = 1.1; 
+draw(x,y,"4q.gif");
+} else if (board[x][y] == -1) {
+board[x][y] = -1.1;
+draw(x,y,"6q.gif");}}
+
+function swap(from,to) {
+if (p1 || p2) {
+dummy_src = document.images["space"+to.x+""+to.y].src;
+document.images["space"+to.x+""+to.y].src = document.images["space"+from.x+""+from.y].src;
+document.images["space"+from.x+""+from.y].src = dummy_src;}
+dummy_num = board[from.x][from.y];
+board[from.x][from.y] = board[to.x][to.y];
+board[to.x][to.y] = dummy_num;}
+
+function remove(x,y) {
+if (p1 || p2)
+draw(x,y,"1.gif");
+board[x][y] = 0;}
+
+function Result(val) {
+this.high = val;
+this.dir = new Array();}
+
+
+
+function gover() {
+p1 = p2 = false;
+for(var i=0;i<8;i++) {
+for(var j=0;j<8;j++) {
+if(integ(board[i][j]) == -1) p2 = true;
+if(integ(board[i][j]) == 1) p1 = true;}}
+if (!p2) message("победа p2!");
+if (!p1) message("победа p1!");
+gover = (!p2 || !p1)
+return (!gover);}
+
+var jump_priority = 10
+
+
+function possibilities(x,y) {
+if (!jump(x,y))
+if (!single(x,y))
+return true;
+else
+return false;
+else
+return false;}
+
+
+function wise(from,to) {
+i = to.x;
+j = to.y;
+n = (j>0);
+s = (j<7);
+e = (i<7);
+w = (i>0);
+if (n&&e) ne = board[i+1][j-1]; else ne = null;
+if (n&&w) nw = board[i-1][j-1]; else nw = null;
+if (s&&e) se = board[i+1][j+1]; else se = null;
+if (s&&w) sw = board[i-1][j+1]; else sw = null;
+eval(((j-from.y != 1)?"s":"n")+((i-from.x != 1)?"e":"w")+"=0;");
+if ((sw==0) && (integ(ne)==1)) return false;
+if ((se==0) && (integ(nw)==1)) return false;
+if ((nw==0) && (se==1.1)) return false;
+if ((ne==0) && (sw==1.1)) return false;
+return true;}
+p1 = true;
+    	</script>     
+    </body>
+</html>
